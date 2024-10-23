@@ -16,17 +16,13 @@
 
 
 // FRAMEWORK CONFIGURATION
-
 const express = require("express");
 const connectDb = require("./config/dbConnection"); // Ensure this path is correct
 const errorHandler = require("./middleware/errorHandler"); // Ensure this path is correct
 const cors = require("cors");
-
 // Connect to the database
 
-
 // Create an Express application
-
 // Middleware
 // app.use(express.json());
 // app.use(cors());
@@ -49,4 +45,36 @@ const dotenv=require("dotenv");
 dotenv.config();
 connectDb();
 const app = express();
+app.set('view engine','hbs');
+app.get("/home",(req,res)=>{
+
+    res.render("home",{
+        username:"Hardik",
+        
+    })
+})
+
 const port = process.env.PORT || 5000;
+// jha package.json hoti hai whi installation hoti hai
+
+// Server listens on the defined port
+app.get("/users",(req,res)=>{
+    res.render("users",{
+
+        people:[
+            {
+                username:"Hardik",
+                age:20
+            },
+            {
+                username:"Singh",
+                age:21
+            }
+        ]
+
+    })
+})
+
+app.listen(port, () => {
+    console.log(`Server running at http://localhost:${port}/`);
+  });
