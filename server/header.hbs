@@ -52,7 +52,7 @@ hbs.registerPartials(__dirname + '/views/partials'); // Path to your partials
 app.get("/home",(req,res)=>{
 
     res.render("home",{
-        username:"Hardik",
+        username:"Krishna",
         
     })
 })
@@ -66,7 +66,7 @@ app.get("/users",(req,res)=>{
 
         people:[
             {
-                username:"Hardik",
+                username:"Krihsna",
                 age:20
             },
             {
@@ -79,5 +79,5 @@ app.get("/users",(req,res)=>{
 })
 
 app.listen(port, () => {
-    console.log(`Server running at http://localhost:${port}/`);
+    console.log(Server running at http://localhost:${port}/);
   });
