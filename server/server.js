@@ -1,83 +1,63 @@
-// const express = require('express');
-// const app = express();
-
-// // Define the port
-// const PORT = 3000;
-
-// // Create a basic route
-// app.get('/', (req, res) => {
-//   res.send('Hello, Express!');
-// });
-
-
-
-
-// FRAMEWORK CONFIGURATION
-
 const express = require("express");
-const connectDb = require("./config/dbConnection"); // Ensure this path is correct
-const errorHandler = require("./middleware/errorHandler"); // Ensure this path is correct
+const connectDb = require("./config/dbConnections.js");
+const errorHandler  = require("./middlewares/errorHandler.js");
 const cors = require("cors");
-const hbs=require("hbs")
-// Connect to the database
+const multer  = require('multer');
+const hbs=require("hbs");
+// const upload = multer({dest: 'uploads/'});
 
-// Create an Express application
-// Middleware
-// app.use(express.json());
-// app.use(cors());
-
-// Basic route
-// app.get("/", (req, res) => {
-//     res.send("Hello World");
-// });
-
-// Error handling middleware
-// app.use(errorHandler);
-
-// Start the server
-// app.listen(port, () => {
-//     console.log(Server is running on port ${port});
-// });
-
-// env file configz
-const dotenv=require("dotenv");
+//env file config
+const dotenv = require("dotenv");
 dotenv.config();
+
 connectDb();
+
 const app = express();
 app.set('view engine','hbs');
+const port = 5001 || 4000 || 4900 ||1000 || 2999 || 1024 || 8080;
 
-hbs.registerPartials(__dirname + '/views/partials'); // Path to your partials
+app.use(express.json());
+app.use(cors()); 
+app.get('/',(req,res)=>{
+    res.send("working");
+});
 
-
-app.get("/home",(req,res)=>{
-
-    res.render("home",{
-        username:"Hardik",
-        
+app.get('/home',(req,res)=>{
+    res.render('home',{
+        username: "xyz",
+        posts: "flana dhimkana"
     })
 })
 
-const port = process.env.PORT || 5000;
-// jha package.json hoti hai whi installation hoti hai
-
-// Server listens on the defined port
-app.get("/users",(req,res)=>{
-    res.render("users",{
-
-        people:[
-            {
-                username:"Hardik",
-                age:20
-            },
-            {
-                username:"Lakshay",
-                age:21
-            }
-        ]
-
+app.get('/allusers',(req,res)=>{
+    res.render('allusers',{
+        data:[{name:"abc", age:20},
+            {name:"def", age:19}]
     })
 })
+app.use("/api/register" , require("./routes/userRoutes"));
+app.use("/api/doctorRegister" , require("./routes/doctorsDetails.js"));
 
-app.listen(port, () => {
-    console.log(`Server running at http://localhost:${port}/`);
-  });
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, './uploads')
+    },
+    filename: function (req, file, cb) {
+      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
+      cb(null, file.fieldname + '-' + uniqueSuffix)
+    }
+  })
+  
+const upload = multer({ storage: storage })
+
+app.post('/profile', upload.single('avatar'), function (req, res, next) {
+    // req.file is the avatar file
+    // req.body will hold the text fields, if there were any
+    console.log(req.body);
+    console.log(req.file);
+    return res.redirect("/home");
+  })
+
+app.listen(port,()=>{
+    console.log(`server running on port http://localhost:${port}`);
+});

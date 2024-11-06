@@ -6,13 +6,14 @@
     <title>Document</title>
 </head>
 <body>
-    <h1>Hello World</h1>
-    {{!-- hm apne data ko fetch kr skte hai server se using double curly braces --}}
-    {{username}}
+    <h1>hello</h1>
+    {{!-- {{username}} --}}
+    <div>
+    <form action="/profile" method="post" enctype="multipart/form-data">
+    <input type="file" name="avatar" />
+    <input type="submit" value="Upload">
+    </form>
+    </div>
+
 </body>
 </html>
-
-{{!-- data=[
-name age 
-name age
-] --}}
