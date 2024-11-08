@@ -35,7 +35,7 @@ app.get('/allusers',(req,res)=>{
             {name:"def", age:19}]
     })
 })
-app.use("/api/register" , require("./routes/userRoutes"));
+app.use("/api/user" , require("./routes/userRoutes"));
 app.use("/api/doctorRegister" , require("./routes/doctorsDetails.js"));
 
 const storage = multer.diskStorage({
