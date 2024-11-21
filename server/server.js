@@ -5,6 +5,7 @@ const cors = require("cors");
 const multer  = require('multer');
 const hbs=require("hbs");
 // const upload = multer({dest: 'uploads/'});
+const File = require('./model/file');
 
 //env file config
 const dotenv = require("dotenv");
@@ -35,7 +36,7 @@ app.get('/allusers',(req,res)=>{
             {name:"def", age:19}]
     })
 })
-app.use("/api/user" , require("./routes/userRoutes"));
+app.use("/api/register" , require("./routes/userRoutes"));
 app.use("/api/doctorRegister" , require("./routes/doctorsDetails.js"));
 
 const storage = multer.diskStorage({
@@ -49,6 +50,37 @@ const storage = multer.diskStorage({
   })
   
 const upload = multer({ storage: storage })
+
+app.get("/home", async (req, res) => {
+    // Fetch all uploaded files from MongoDB
+    const files = await File.find();
+    res.render("home", {
+        username: "xyz",
+        users: [{ name: "blahblah", age: 30 }, { name: "abc", age: 25 }],
+        files: files // Pass files to the template
+    });
+});
+
+// Route to handle file upload and save metadata in MongoDB
+app.post('/profile', upload.single('avatar'), async (req, res) => {
+    try {
+        // Create a new file record in MongoDB
+        const fileData = new File({
+            originalName: req.file.originalname,
+            filename: req.file.filename,
+            path: req.file.path,
+            size: req.file.size,
+        });
+
+        await fileData.save(); // Save metadata to MongoDB
+        console.log("File metadata saved:", fileData);
+
+        return res.redirect("/home");
+    } catch (error) {
+        console.error("Error uploading file:", error);
+        res.status(500).send("Error uploading file.");
+    }
+});
 
 app.post('/profile', upload.single('avatar'), function (req, res, next) {
     // req.file is the avatar file
